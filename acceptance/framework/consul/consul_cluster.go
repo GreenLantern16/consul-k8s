@@ -75,8 +75,8 @@ func NewHelmCluster(
 	require.NoError(t, err)
 
 	// Merge all helm values
-	MergeMaps(values, valuesFromConfig)
-	MergeMaps(values, helmValues)
+	helpers.MergeMaps(values, valuesFromConfig)
+	helpers.MergeMaps(values, helmValues)
 
 	logger := terratestLogger.New(logger.TestLogger{})
 
@@ -213,7 +213,7 @@ func (h *HelmCluster) Destroy(t *testing.T) {
 func (h *HelmCluster) Upgrade(t *testing.T, helmValues map[string]string) {
 	t.Helper()
 
-	MergeMaps(h.helmOptions.SetValues, helmValues)
+	helpers.MergeMaps(h.helmOptions.SetValues, helmValues)
 	helm.Upgrade(t, h.helmOptions, config.HelmChartPath, h.releaseName)
 	helpers.WaitForAllPodsToBeReady(t, h.kubernetesClient, h.helmOptions.KubectlOptions.Namespace, fmt.Sprintf("release=%s", h.releaseName))
 }
@@ -471,12 +471,4 @@ func defaultValues() map[string]string {
 		"client.extraConfig": `"{\"log_level\": \"TRACE\"}"`,
 	}
 	return values
-}
-
-// MergeMaps will merge the values in b with values in a and save in a.
-// If there are conflicts, the values in b will overwrite the values in a.
-func MergeMaps(a, b map[string]string) {
-	for k, v := range b {
-		a[k] = v
-	}
 }

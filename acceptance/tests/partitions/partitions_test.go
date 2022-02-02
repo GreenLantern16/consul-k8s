@@ -128,7 +128,7 @@ func TestPartitions(t *testing.T) {
 
 			releaseName := helpers.RandomName()
 
-			consul.MergeMaps(serverHelmValues, commonHelmValues)
+			helpers.MergeMaps(serverHelmValues, commonHelmValues)
 
 			// Install the consul cluster with servers in the default kubernetes context.
 			serverConsulCluster := consul.NewHelmCluster(t, serverHelmValues, serverClusterContext, cfg, releaseName)
@@ -229,7 +229,7 @@ func TestPartitions(t *testing.T) {
 				clientHelmValues["meshGateway.service.nodePort"] = "30100"
 			}
 
-			consul.MergeMaps(clientHelmValues, commonHelmValues)
+			helpers.MergeMaps(clientHelmValues, commonHelmValues)
 
 			// Install the consul cluster without servers in the client cluster kubernetes context.
 			clientConsulCluster := consul.NewHelmCluster(t, clientHelmValues, clientClusterContext, cfg, releaseName)
